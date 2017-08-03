@@ -1,0 +1,193 @@
+    1  cd
+    2  vim /etc/yum.repos.d/base.repo
+    3  vi /etc/yum.repos.d/base.repo
+    4  yum repolist
+    5  yumm install epel-release -y
+    6  yum install epel-release -y
+    7  yum install epel-release -y
+    8  yum update -y
+    9  uname -sr
+   10  yum install net-tools -y
+   11  ifconfig
+   12  wget http://apache.mirrors.hoobly.com/tomcat/tomcat-8/v8.5.16/bin/apache-tomcat-8.5.16.tar.gz
+   13  yum install wget -y
+   14  ifconfig
+   15  wget http://apache.mirrors.hoobly.com/tomcat/tomcat-8/v8.5.16/bin/apache-tomcat-8.5.16.tar.gz
+   16  tar xzvf apache-tomcat-8.5.16.tar.gz 
+   17  ls -l
+   18   mv apache-tomcat-8.5.16 /opt/tomcat8
+   19  cd
+   20  ls -l
+   21  tar xzvf jdk-8u131-linux-x64.tar.gz 
+   22  mv jdk1.8.0_131 /opt/jdk8
+   23  ls -l
+   24  alternatives -- install /usr/bin/java java /opt//jdk8/bin/java
+   25  alternatives -- install /usr/bin/java java /opt/jdk8/bin/java
+   26  alternatives --install /usr/bin/java java /opt/jdk8/bin/java
+   27  alternatives --install /usr/bin/java java /opt/jdk8/bin/java
+   28  alternatives --install /usr/bin/java java /opt/jdk8/bin/java 2
+   29  alternatives --install /usr/bin/javac jar /opt/jdk8/bin/jar 2
+   30  alternatives --install /usr/bin/jar jar /opt/jdk8/
+   31  alternatives --install /usr/bin/jar jar /opt/jdk8/jar
+   32  alternatives --install /usr/bin/jar jar /opt/jdk8/jar
+   33  alternatives --install /usr/bin/jar jar /opt/jdk8/jar
+   34  alternatives --install /usr/bin/jar jar /opt/jdk8/jar
+   35  alternatives --set javac /opt/jdk8/bin/javac
+   36  alternatives --set jar /opt/jdk8/bin/jar
+   37  java -version
+   38  export CATALINA_HOME=/opt/tomcat8/
+   39  cd /opt/tomcat8/
+   40  ls -l
+   41  cd bin/
+   42  ./startup.sh 
+   43  systemctl stop firewalld
+   44  systemctl disable firewalld
+   45  ./catalina.sh stop
+   46  vim ../conf/tomcat-users.xml 
+   47  yum install vim
+   48  vim ../conf/tomcat-users.xml 
+   49  ./catalina.sh start
+   50  systemctl stop firewalld
+   51  vim ../conf/context.xml 
+   52  cd ../webapps/
+   53  ls -l
+   54  cd manager/META-INF/context.xml 
+   55  pwd; vim manager/META-INF/context.xml 
+   56  ce ../../
+   57  cd ../bin/
+   58  ./catalina.sh stop
+   59  ./catalina.sh start
+   60  vim ../conf/tomcat-users.xml 
+   61  ./catalina.sh stop
+   62  ./catalina.sh start
+   63  ./catalina.sh stop
+   64  ./catalina.sh start
+   65  systemctl stop firewalld
+   66  systemctl disable firewalld
+   67  systemctl disable firewalld
+   68  ping 192.168.32.4
+   69  ping google.com
+   70  ping google.com
+   71  ping 192.168.32.4
+   72  ping 192.168.32.4
+   73  ifconfig
+   74  ./catalina.sh start
+   75  vim /opt/tomcat8/conf/tomcat-users.xml 
+   76  cd ../conf/
+   77  vim server.xml 
+   78  vim server.xml 
+   79  yum install nginx
+   80  yum install nginx -y
+   81  pwd
+   82  cd
+   83  vim /etc/profile
+   84  exit
+   85  echo $JRE_HOME
+   86  source /etc/profile
+   87  echo $JRE_HOME
+   88  cd /etc/nginx/
+   89  mkdir vhost.d
+   90  vim nginx.conf
+   91  cd vhost.d/
+   92  vim default.conf
+   93  systemctl start nginx
+   94  systemctl status nginx.service
+   95  cd ../
+   96  vim nginx.conf
+   97  systemctl start nginx
+   98  systemctl status nginx.service
+   99  systemctl enable nginx
+  100  cd /opt/tomcat8/webapps/
+  101  ls -l
+  102  mkdir sample
+  103  cd sample/
+  104  vim index.html
+  105  cd ../../bin/
+  106  ./catalina.sh stop
+  107  ./catalina.sh start
+  108  yum install apple-release
+  109  systemctl reload nginx
+  110  poweroff
+  111  ping google.com
+  112  ifconfig
+  113  ip add show
+  114  uname  -sr
+  115  ifconfig
+  116  cd
+  117  cd /opt/
+  118  mkdir tomcat8_2
+  119  cp -rf tomcat8/* tomcat8_2/
+  120  cd tomcat8_2/
+  121  ls -l
+  122  cd conf/
+  123  vim server.xml 
+  124  cd ../bin/
+  125  ./catalina.sh start
+  126  ps aux | grep tomcat
+  127  cd /etc/nginx/vhost.d/
+  128  vim default.conf 
+  129  nginx -t
+  130  systemctl start nginx
+  131  systemctl restart nginx
+  132  cd /opt/tomcat8
+  133  cd bin/
+  134  ./catalina.sh start
+  135  ps -aux | grep tomcat
+  136  vim ../conf/server.xml 
+  137  ./catalina.sh restart
+  138  ./catalina.sh start
+  139  telnet localhost 8443
+  140  yum install telnet -y
+  141  telnet localhost 8443
+  142  telnet 127.0.0.1 8443
+  143  netstat -A inet -vepa
+  144  telnet localhost 8080
+  145  telnet localhost 8005
+  146  telnet localhost 8006
+  147  telnet localhost 8443
+  148  ./catalina.sh stop
+  149  ./catalina.sh start
+  150  vim ../conf/server.xml 
+  151  ./catalina.sh stop
+  152  ./catalina.sh start
+  153  telnet localhost 8443
+  154  telnet localhost 8443
+  155  telnet localhost 8443
+  156  poweroff
+  157  pa aux | grep tomcat
+  158  ps aux | grep tomcat
+  159  systemctl enable tomcat.service
+  160  systemctl start tomcat.service
+  161  ps aux | grep tomcat
+  162  mkdir tomcat8
+  163  history > tomcat8/tomcatWithNginx
+  164  cat tomcat8/tomcatWithNginx
+  165  rpm -qa git
+  166  cd tomcat8/
+  167  git  config --help
+  168  git config --global user.name gkdangal
+  169  git config --global user.email gkdangal@gmail.com
+  170  git init
+  171  git commit -m "Tomcat 8 configuration" 
+  172  git remote add origin https://github.com/gkdangal/Tomcat8ConfWithNginx.git
+  173  git add .
+  174  git push -u origin master
+  175  ls -l
+  176  mv tomcatWithNginx tomcatWithNginx.txt
+  177  git push -u origin master
+  178  git config --global user.email gkdangal@gmail.com
+  179  git config --global user.name gkdangal
+  180  git push -u origin master
+  181  git remote add origin https://github.com/gkdangal/Tomcat8ConfWithNginx.git
+  182  git push -u origin master
+  183  ls -l
+  184  cd ../
+  185  mv tomcat8 Tomcat8ConfWithNginx
+  186  cd Tomcat8ConfWithNginx/
+  187  ls -al
+  188  git push -u origin master
+  189  cd ../
+  190  rm -rf Tomcat8ConfWithNginx/
+  191  pwd
+  192  cd /home/govinda/
+  193  history >> tomcat.txt

@@ -1,0 +1,280 @@
+Tompic cover in tomcat administration
+1. Installation and basic setup
+2. Tomcat archetecture and configuration
+3. web application structure and setup
+4. securing tomcat with SSL
+5. Deploying application and services
+6. Tunning tomcat for optimal perfermance
+7. Tomcat clustering overview for high availability.
+
+########################
+Installation
+########################
+[root@ip-172-31-74-105 ec2-user]#
+[root@ip-172-31-74-105 ec2-user]# ls -l
+total 181200
+drwxr-xr-x 8 uucp          143      4096 Mar 15 08:35 jdk1.8.0_131
+-rw-r--r-- 1 ec2-user ec2-user 185540433 Jul 22 05:48 jdk-8u131-linux-x64.tar.gz
+drwxr-xr-x 2 root     root          4096 Jul 21 23:55 test
+[root@ip-172-31-74-105 ec2-user]# mv jdk
+jdk1.8.0_131/               jdk-8u131-linux-x64.tar.gz
+[root@ip-172-31-74-105 ec2-user]# mv jdk1.8.0_131 /opt/jdk8
+[root@ip-172-31-74-105 ec2-user]# ls -l
+total 181196
+-rw-r--r-- 1 ec2-user ec2-user 185540433 Jul 22 05:48 jdk-8u131-linux-x64.tar.gz
+drwxr-xr-x 2 root     root          4096 Jul 21 23:55 test
+[root@ip-172-31-74-105 ec2-user]#
+[root@ip-172-31-74-105 ec2-user]# cd opt
+bash: cd: opt: No such file or directory
+[root@ip-172-31-74-105 ec2-user]# cd /opt
+[root@ip-172-31-74-105 opt]#
+[root@ip-172-31-74-105 opt]# cd jdk8/
+[root@ip-172-31-74-105 jdk8]# ls -l
+total 25884
+drwxr-xr-x 2 uucp 143     4096 Mar 15 08:33 bin
+-r--r--r-- 1 uucp 143     3244 Mar 15 08:32 COPYRIGHT
+drwxr-xr-x 4 uucp 143     4096 Mar 15 08:32 db
+drwxr-xr-x 3 uucp 143     4096 Mar 15 08:32 include
+-rwxr-xr-x 1 uucp 143  5097105 Mar 15 04:39 javafx-src.zip
+drwxr-xr-x 5 uucp 143     4096 Mar 15 08:32 jre
+drwxr-xr-x 5 uucp 143     4096 Mar 15 08:33 lib
+-r--r--r-- 1 uucp 143       40 Mar 15 08:32 LICENSE
+drwxr-xr-x 4 uucp 143     4096 Mar 15 08:32 man
+-r--r--r-- 1 uucp 143      159 Mar 15 08:32 README.html
+-rw-r--r-- 1 uucp 143      526 Mar 15 08:32 release
+-rw-r--r-- 1 uucp 143 21115141 Mar 15 08:32 src.zip
+-rwxr-xr-x 1 uucp 143    63933 Mar 15 04:39 THIRDPARTYLICENSEREADME-JAVAFX.txt
+-r--r--r-- 1 uucp 143   177094 Mar 15 08:32 THIRDPARTYLICENSEREADME.txt
+[root@ip-172-31-74-105 jdk8]#
+
+[root@ip-172-31-74-105 jdk8]# alternatives --install /usr/bin/java java /opt//jdk8/bin/java 2
+alternatives version 1.3.49.3 - Copyright (C) 2001 Red Hat, Inc.
+This may be freely redistributed under the terms of the GNU Public License.
+
+usage: alternatives --install <link> <name> <path> <priority>
+  
+[root@ip-172-31-74-105 jdk8]# alternatives --install /usr/bin/java java /opt//jdk8/bin/java 2
+[root@ip-172-31-74-105 jdk8]#
+[root@ip-172-31-74-105 jdk8]#                                                                                                                bin/jar 2
+[root@ip-172-31-74-105 jdk8]# alternatives --install /usr/bin/javac javac /opt/javac 2                                                                                                              dk8/bin/javac 2
+[root@ip-172-31-74-105 jdk8]# alternatives --set javac /opt/jdk8/bin/javac
+[root@ip-172-31-74-105 jdk8]# alternatives --set jar /opt/jdk8/bin/jar
+[root@ip-172-31-74-105 jdk8]# java -version
+java version "1.7.0_141"
+OpenJDK Runtime Environment (amzn-2.6.10.1.73.amzn1-x86_64 u141-b02)
+OpenJDK 64-Bit Server VM (build 24.141-b02, mixed mode)
+[root@ip-172-31-74-105 jdk8]# javac -version
+javac 1.8.0_131
+[root@ip-172-31-74-105 jdk8]#
+###############################
+Apache tomcat Installation(look at the position of directory)
+###############################
+[root@ip-172-31-74-105 opt]# wget http://mirror.stjschools.org/public/apache/tomcat/tomcat-8/v8.5.16/bin/apache-tomcat-8.5.16.tar.gz                              .16/bin/apache-tomcat-8.5.16.tar.gz
+[root@ip-172-31-74-105 opt]# tar zxvf apache-tomcat-8.5.16.tar.gz
+[root@ip-172-31-74-105 bin]# mv apache-tomcat-8.5.16/ tomcat8
+[root@ip-172-31-74-105 bin]# export CATALINA_HOME=/opt/tomcat8/
+[root@ip-172-31-74-105 bin]# ./startup.sh
+[root@ip-172-31-74-105 bin]# ps -aux | grep tomcat
+
+######################################
+we already install and configure tomcat 8 basic
+In this section we are going to manage systemd service for apache tomcat server.
+setting up the environment veriable.
+[root@ip-172-31-74-105 ~]# cd /etc/
+[root@ip-172-31-74-105 etc]# vim profile
+
+CATALINA_BASE=/opt/tomcat8
+CATALINA_HOME=/opt/tomcat8
+CATALINA_TMPDIR=/opt/tomcat8
+JAVA_HOME=/opt/jdk8
+JRE_HOME=/opt/jdk8
+
+:x
+
+[root@ip-172-31-74-105 ~]# set | grep CATALINA
+CATALINA_BASE=/opt/tomcat8
+CATALINA_HOME=/opt/tomcat8
+CATALINA_TMPDIR=/opt/tomcat8
+[root@ip-172-31-74-105 ~]#
+###############################
+vim /opt/tomcat8/conf/tomcat-users.xml
+
+ <role rolename="tomcat"/>
+  <role rolename="role1"/>
+  <role rolename="manager-gui"/>
+  <user username="tomcat" password="tomcat" roles="tomcat"/>
+  <user username="both" password="tomcat" roles="tomcat,role1"/>
+  <user username="role1" password="tomcat" roles="role1"/>
+
+&&&&&&&&&&&&&&&&&&&&&&&&&
+/opt/tomcat/webapps/host-manager/META-INF/context.xml
+#vim /opt//jdk8/webapp/
+User and Security management
+<Context antiResourceLocking="false" privileged="true" >
+  <!--<Valve className="org.apache.catalina.valves.RemoteAddrValve"
+         allow="127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1" />-->
+</Context>
+#########################
+Deploying Application
+
+###########################
+Securing Tomcat APache
+[root@localhost conf]# vim server.xml
+change it shutdown="SH#TDOWN" to what ever you want
+<Server port="8005" shutdown="SH#TDOWN">
+  <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
+###################################
+Connecting to proxy
+Install nginx
+make directory on nginx vhost.db
+vim /etc/nginx/nginx.conf
+
+server {
+	listen 80;
+	
+	root /opt/tomcat8/webapps/sample/;
+	index index.php index.html index.htm;
+	
+	server_name localhost;
+	
+	location / {
+		try_files $uri $uri/ index.php;
+	}
+	location ~ \.php$ {
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Forwarded-For $remote_addr;
+		proxy_set_header Host $host;
+		proxy_pass http://172.0.01:8080;
+	}
+	
+	location ~ /\.ht {
+		deny all;
+	}
+	
+}
+###############################################
+Basic Clustering
+[root@localhost ~]# cd /opt/
+[root@localhost opt]# mkdir tomcat8_2
+[root@localhost opt]# cp -rf tomcat8/* tomcat8_2/
+[root@localhost opt]# cd tomcat8_2/
+[root@localhost tomcat8_2]# ls -l
+
+Now we have to manage port conflict
+[root@localhost tomcat8_2]# cd conf/
+[root@localhost conf]# vim server.xml
+we are going to increase all of the port by one
+
+<Server port="8006" shutdown="SH#TDOWN">
+
+<Connector port="8081" protocol="HTTP/1.1"
+               connectionTimeout="20000"
+               redirectPort="8444" />
+			   
+Here i havent enabble ssl but if you are using ssl port just enable it.
+
+<Connector port="8010" protocol="AJP/1.3" redirectPort="8444" />
+
+$$$$$$$$$$$$$$$$$$
+load balancing (load balancing may be physical virtual or defined by port on the same machine.)
+for load balancing we have to add some content on /etc/nginx/vhost.d/default.conf 
+i amadoing tomcat clustering defined by port.
+
+[root@localhost bin]# cd /etc/nginx/vhost.d/
+[root@localhost vhost.d]# vim default.conf
+
+upstream mytomcat {
+	server localhost:8080;
+	server localhost:8080;
+}
+$$$$$$$$$$$
+upstream mytomcat {
+        server localhost:8080;
+        server localhost:8081;
+}
+
+
+
+
+
+server {
+
+        listen 80;
+
+        root /opt/tomcat8/webapps/sample/;
+        index index.php index.html index.htm;
+
+        server_name localhost;
+
+        location / {
+                try_files $uri $uri/ index.php;
+        }
+        location ~ \.php$ {
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $remote_addr;
+                proxy_set_header Host $host;
+                proxy_pass http://mytomcat;
+        }
+
+        location ~ /\.ht {
+                deny all;
+        }
+
+}
+
+finally
+[root@localhost vhost.d]# nginx -t
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+[root@localhost vhost.d]# systemctl start nginx
+[root@localhost vhost.d]# systemctl restart nginx
+[root@localhost vhost.d]#
+now check two different server but serve same thing by different port
+##########################
+Tunning tomcat port
+
+
+#########################
+Managing tomcat as a service
+
+[root@localhost govinda]# vim /etc/sysconfig/tomcat
+####Environment files
+
+CATALINA_HOME=/opt/tomcat8
+JAVA_HOME=/opt/jdk8
+JSVC=/bin/jsvc
+
+[root@localhost govinda]#
+$$$$$$$$$$$$$$$$$
+[root@localhost govinda]# vim /usr/lib/systemd/system/tomcat.service
+[Unit]
+Description=Tomcat Webserver
+After=syslog.target network.target
+
+[Service]
+Type=forking
+User=tomcat
+EnvironmentFile=/etc/sysconfig/tomcat
+ExecStart=/opt/tomcat8/bin/catalina.sh start
+ExecStop=/opt/tomcat8/bin/catalina.sh stop
+
+[Install]
+WantedBy=multi.user.target
+
+[root@localhost govinda]#
+################################
+Running Multiple Instances on a Single Server: Setup
+
+
+
+
+
+
+
+
+
+
+
+
+
+

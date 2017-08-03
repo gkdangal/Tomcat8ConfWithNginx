@@ -1,0 +1,209 @@
+
+set up linux machine or use ec2-instance of amazon
+But here i am managing one centos minimal machine on oracle virtual machine.Disable and stop firewalld.
+Set up base repo for centos
+login as a root 
+#vi /etc/yum.repos.d/base.repo
+[base]
+name=CentOS-$releasever - Base
+mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=os
+#baseurl=http://mirror.centos.org/centos/$releasever/os/$basearch/
+gpgcheck=1
+gpgkey=http://mirror.centos.org/centos/RPM-GPG-KEY-centos4
+
+#released updates 
+[update]
+name=CentOS-$releasever - Updates
+mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=updates
+#baseurl=http://mirror.centos.org/centos/$releasever/updates/$basearch/
+gpgcheck=1
+gpgkey=http://mirror.centos.org/centos/RPM-GPG-KEY-centos4
+####################################################
+#yum install vim epel-release -y
+################################
+#yum install nginx -y 
+######################
+[root@localhost govinda]# systemctl enable nginx
+
+Created symlink from /etc/systemd/system/multi-user.target.wants/nginx.service to /usr/lib/systemd/system/nginx.service.
+[root@localhost govinda]#
+[root@localhost govinda]# systemctl start nginx
+[root@localhost govinda]#
+#######################################
+Nginx UPTIMIZATION
+[root@localhost nginx]# ulimit -m
+unlimited
+[root@localhost nginx]# vim /etc/nginx/nginx.conf
+#At http section you can add three buffer values. I increase the performance of server.
+http {
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log  /var/log/nginx/access.log  main;
+
+    sendfile            on;
+    tcp_nopush          on;
+    tcp_nodelay         on;
+    keepalive_timeout   65;
+    types_hash_max_size 2048;
+
+    include             /etc/nginx/mime.types;
+    default_type        application/octet-stream;
+
+    # Load modular configuration files from the /etc/nginx/conf.d directory.
+    # See http://nginx.org/en/docs/ngx_core_module.html#include
+    # for more information.
+
+         client_body_buffer_size 10K;
+        client_header_buffer_size 1k;
+        client_max_body_size 8m;
+        large_client_header_buffers 2 1k;
+
+        #it depend up on the different factor of server like ram, cpu etc
+        client_body_timeout 12;
+        client_header_timeout 12;
+        keepalive_timeout 15;
+        send_timeout 10;
+		
+    #include /etc/nginx/conf.d/*.conf;
+	include /etc/nginx/vhost.d/*conf;
+	###please remove all server part from here because we are going to create server part on 
+	###/etc/nginx/vhost.d/default.conf you can see it below
+
+    #server {
+    #    listen       80 default_server;
+    #    listen       [::]:80 default_server;
+    #    server_name  _;
+    #    root         /usr/share/nginx/html;
+
+        # Load configuration files for the default server block.
+    #    include /etc/nginx/default.d/*.conf;
+
+     #   location / {
+     #   }
+
+    #    error_page 404 /404.html;
+    #       location = /40x.html {
+	#			root /usr/share/nginx/html
+    #   }
+
+    #   error_page 500 502 503 504 /50x.html;
+    #       location = /50x.html {
+	#			root /usr/share/nginx/html
+    #   }
+    #}
+$$$$$$$$$$$$$$$$$$$$$$$$$$
+time out setting
+
+		client_body_buffer_size 10K;
+        client_header_buffer_size 1k;
+        client_max_body_size 8m;
+        large_client_header_buffers 2 1k;
+
+        #it depend up on the different factor of server like ram, cpu etc
+        client_body_timeout 12;
+        client_header_timeout 12;
+        keepalive_timeout 15;
+        send_timeout 10;
+
+	
+#########################################################
+crate vhost directory on /etc/nginx/vhost.d/
+#vim default.conf
+
+##########
+## The Default Server
+#####
+
+server {
+        listen       80 default_server;
+        server_name  _;
+
+        #charset koi8-r;
+
+        #access_log  logs/host.access.log  main;
+
+        location / {
+            root   /var/www/html;
+            index  index.html index.htm;
+        }
+
+        error_page  404              /404.html;
+        location = /40x.html {
+                root /usr/share/nginx/html;
+        }
+        # redirect server error pages to the static page /50x.html
+        #
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root /usr/share/nginx/html;
+        }
+
+        # proxy the PHP scripts to Apache listening on 127.0.0.1:80
+        #
+        #location ~ \.php$ {
+        #    proxy_pass   http://127.0.0.1;
+        #}
+
+        # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+        #
+        #location ~ \.php$ {
+        #    root           html;
+        #    fastcgi_pass   127.0.0.1:9000;
+        #    fastcgi_index  index.php;
+        #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+        #    include        fastcgi_params;
+        #}
+
+        # deny access to .htaccess files, if Apache's document root
+        # concurs with nginx's one
+        #
+        #location ~ /\.ht {
+        #    deny  all;
+        #}
+    }
+reload or restart nginx
+[root@localhost nginx]# systemctl restart nginx
+[root@localhost nginx]#
+################
+check containt of /var/www/html/ using browser if you see what you put on index.html
+if you see like this output
+
+403 forbidden
+________________________________________
+ nginx/1.10.2
+ 
+This is because of selinux policy of centos just type this command 
+or disable the selinux
+
+[root@localhost nginx]# curl -I http://localhost
+HTTP/1.1 403 Forbidden
+Server: nginx/1.10.2
+Date: Tue, 01 Aug 2017 06:39:49 GMT
+Content-Type: text/html
+Content-Length: 169
+Connection: keep-alive
+
+[root@localhost nginx]# restorecon -r /var/www/html
+#################OR#######################
+[root@localhost nginx]#setenforce 0
+[root@localhost nginx]# vim /etc/sysconfig/selinux
+change selinux policy
+selinux=DISABLE or PERMISSIVE
+#########################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
